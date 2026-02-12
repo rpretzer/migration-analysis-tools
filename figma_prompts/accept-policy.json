@@ -1,0 +1,18 @@
+{
+  "ux_intent": "Validate that the policy text is fully scrollable, the accept CTA is gated behind an explicit checkbox (not scroll position), and the interaction between checkbox state and button enable/disable is clear and unambiguous.",
+  "figma_make_prompt": "Build an accept policy screen for the Hoopla digital library app.\n\nPlatform: mobile (iOS and Android), 390x844 base frame.\nUse a top app bar with title \"Terms of Service\" and a back arrow.\n\nLayout:\n- Scrollable text area: full-width, 16px horizontal padding. Body Small 14sp #121212, line height 1.5. Policy text fills the viewport above the fixed footer.\n- Fixed footer (pinned to the bottom, does not scroll with the text):\n  - 1px divider #E5E7EB across full width.\n  - Checkbox row (48dp height, 16px horizontal padding): checkbox 24x24dp (inside a 48x48dp touch target) left, label \"I have read and accept the Terms of Service\" (Body Small 14sp #121212) right.\n  - \"Accept\" button: primary filled, full-width, 48dp height. Disabled (50 % opacity) when checkbox is unchecked; enabled (full opacity) when checked.\n\nStates:\n- Default (checkbox unchecked): policy text at the top of the scroll. Checkbox unchecked (empty square, 1px border #6B7280). Accept button disabled.\n- Checkbox checked: checkbox shows a checkmark (primary #6366F1 fill, white checkmark). Accept button becomes enabled (full opacity #6366F1).\n- Accepted: brief success toast \"Terms accepted\" at the bottom of the screen (auto-dismiss 2 seconds). Screen navigates to the next onboarding step.\n\nBehavior:\n- Scroll the text area → standard vertical scroll. Footer stays fixed.\n- Tap checkbox → toggle checked/unchecked. Accept button enable state updates immediately.\n- Tap Accept (when enabled) → show accepted state.\n- Tap back arrow → dismiss without accepting.\n\nStyle:\n- Material 3-ish, light. Background #FFFFFF. Primary #6366F1. Disabled button 50 % opacity. Auto layout.\n\nFirst step: default state with policy text visible at the top, checkbox unchecked, and Accept button in its disabled state in the fixed footer.",
+  "ui_acceptance_criteria": [
+    "Given the checkbox is unchecked\nWhen the user views the Accept button\nThen it is visually disabled (50 % opacity) and does not respond to taps",
+    "Given the user checks the checkbox\nWhen the state updates\nThen the Accept button becomes full opacity and tappable, and the checkbox shows a primary-colour checkmark",
+    "Given the user taps Accept with the checkbox checked\nWhen the action completes\nThen a success toast appears and the screen transitions",
+    "Given the policy text is longer than the viewport\nWhen the user scrolls\nThen the footer (checkbox + button) remains fixed at the bottom while the text scrolls independently"
+  ],
+  "manual_validation_checklist": [
+    "Verify the footer is fixed: scroll the text and confirm checkbox and button do not move",
+    "Measure checkbox touch target: ≥ 48x48dp (pad around the 24x24dp visual square if needed)",
+    "Confirm Accept button is full-width, 48dp height. Disabled state is 50 % opacity; enabled is full opacity",
+    "Check policy text: Body Small 14sp, line height 1.5, #121212 on #FFFFFF — contrast ≥ 4.5:1",
+    "Verify checkbox label is Body Small 14sp and legible next to the checkbox",
+    "Confirm divider above the footer is 1px #E5E7EB and spans full width"
+  ]
+}

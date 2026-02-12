@@ -1,0 +1,18 @@
+{
+  "ux_intent": "Validate that the six highlight colours are identifiable by name — not by colour index — so that colour-blind users and screen-reader users can select and confirm the correct highlight without ambiguity.",
+  "figma_make_prompt": "Build an ebook highlight colour picker overlay for the Hoopla digital library app.\n\nPlatform: mobile (iOS and Android), 390x844 base frame.\nNo top app bar. The overlay appears as a bottom sheet with a drag handle at the top centre.\n\nLayout:\n- Bottom sheet: auto height, minimum 180dp. Top corners 16px radius. Background #FFFFFF. Drop shadow above.\n- Header row: \"Highlight Style\" (Body Large, 16sp, weight 600, #121212) left-aligned with 16px left padding. Close button (X) right-aligned, 48x48dp touch target.\n- Colour grid: 2 rows × 3 columns, centred, 16px gap between items. Each colour button:\n  - Circle 48x48dp, filled with the colour.\n  - Text label directly beneath the circle (Caption, 12sp, #121212): colour name.\n  - Touch target: 48x48dp around the circle (the circle itself is the touch target).\n  - Selected state: 3px ring in primary #6366F1 around the circle. Label becomes weight 600.\n- Colours and labels in order (left to right, top to bottom): Yellow (#FACC15), Blue (#60A5FA), Green (#34D399), Orange (#FB923C), Pink (#F472B6), Purple (#A78BFA).\n- Footer: two full-width buttons with 8px gap — \"Apply\" (primary filled, 48dp) and \"Cancel\" (secondary outlined, 48dp).\n\nStates:\n- Default: no colour selected. All circles in normal state. Apply button disabled (50 % opacity).\n- Colour selected: selected circle has the 3px primary ring, its label is bold. Apply button enabled (full opacity).\n- Applied: bottom sheet dismisses. A brief success toast \"Highlight applied\" appears at the bottom of the screen (auto-dismiss after 2 seconds).\n\nBehavior:\n- Tap a colour circle → select it (ring appears, label boldens), enable Apply.\n- Tap Apply → dismiss sheet, show toast.\n- Tap Cancel or drag sheet down → dismiss sheet, no highlight applied.\n\nStyle:\n- Light. Material 3-ish. Background #FFFFFF. Primary #6366F1. Labels #121212. Auto layout.\n\nFirst step: default state with all six colour circles and their labels visible, no colour selected, and the Apply button in its disabled state.",
+  "ui_acceptance_criteria": [
+    "Given the highlight colour picker is displayed\nWhen the user views the colour options\nThen each of the six circles has a distinct text label beneath it naming the colour",
+    "Given no colour is selected\nWhen the user views the Apply button\nThen it is visually disabled (50 % opacity) and does not respond to taps",
+    "Given the user taps a colour circle\nWhen the selection updates\nThen that circle shows a 3px primary ring, its label becomes bold, and the Apply button becomes enabled",
+    "Given the user taps Apply after selecting a colour\nWhen the action completes\nThen the sheet dismisses and a success toast confirms the highlight was applied"
+  ],
+  "manual_validation_checklist": [
+    "Verify all six colour circles have text labels: Yellow, Blue, Green, Orange, Pink, Purple — no index numbers",
+    "Measure each colour circle touch target: ≥ 48x48dp",
+    "Confirm label text is Caption 12sp, #121212 on #FFFFFF background — contrast ≥ 4.5:1",
+    "Check selected-state ring (3px primary) is visible against each colour fill",
+    "Verify Apply button is visually distinct when disabled (50 % opacity) vs enabled (full opacity)",
+    "Confirm the drag handle is present at the top centre of the bottom sheet"
+  ]
+}

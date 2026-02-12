@@ -1,0 +1,17 @@
+{
+  "ux_intent": "Validate that the TV home screen organises content into D-pad-navigable rows, focus indicators are large and visible at 10-foot viewing distance, and the layout works at TV resolution with appropriate text sizing.",
+  "figma_make_prompt": "Build a TV home screen for the Hoopla digital library app.\n\nPlatform: Android TV, 1920x1080 base frame.\nNo top app bar. Full-screen layout. A persistent side navigation panel on the left: collapsed by default at 60dp wide (icons only), expands to 240dp on focus (icons + labels). Icons: Home (active, primary #6366F1), Browse, Search, Settings — each 32dp, white when inactive.\n\nLayout:\n- Main content area (right of side nav): vertical scroll of content rows.\n- Each row:\n  - Row header: category name (Title Small 20sp #FFFFFF weight 600), left-aligned, 32px from the left edge of the content area.\n  - Horizontal-scroll row of title cards: each 280x380dp. Cover image fills the card, radius 12px. Title overlaid at the bottom on a gradient (black 50 % opacity), Body Medium 18sp #FFFFFF.\n  - 32px vertical gap between rows.\n- Visible rows: Featured, Continue Watching, New Releases, Popular.\n- Focus ring: 4px solid primary #6366F1 around the focused card. Focused card scales up 1.05×.\n\nStates:\n- Default: first card in Featured row is focused. Focus ring and scale-up visible.\n- Row navigation: D-pad up/down moves focus between rows. Focus lands on the first card of the target row.\n- Card navigation: D-pad left/right moves focus within the current row.\n- Side nav focused: icons are visible; if D-pad select is pressed, the panel expands to show labels.\n\nBehavior:\n- D-pad right/left → move focus within the row.\n- D-pad down/up → move focus to the next/previous row.\n- D-pad select on a card → navigate to TV Playback.\n- D-pad left when on the first card in a row → move focus to the side nav.\n- D-pad select on a side nav item → navigate to that section.\n\nStyle:\n- Dark theme. Background #0F0F1A. Card radius 12px. Text #FFFFFF. Side nav active icon primary #6366F1. Focus ring 4px primary. Auto layout.\n- All text ≥ 18sp for 10-foot readability.\n\nFirst step: default state with four content rows visible, the first card in Featured focused (ring + scale), and the side nav in its collapsed state.",
+  "ui_acceptance_criteria": [
+    "Given the TV home screen is displayed\nWhen the user uses the D-pad to navigate between cards and rows\nThen focus moves predictably and the 4px primary ring is visible on the currently focused element at all times",
+    "Given the user presses D-pad select on a content card\nWhen the action registers\nThen the screen navigates to the TV Playback screen",
+    "Given focus is on the leftmost card in a row and D-pad left is pressed\nWhen focus moves\nThen the side nav receives focus and its icons are visible"
+  ],
+  "manual_validation_checklist": [
+    "Verify the focus ring is 4px solid primary and visible on every card position",
+    "Confirm all text is ≥ 18sp: row headers (20sp), card titles (18sp), side nav labels",
+    "Measure title cards: 280x380dp each. Confirm horizontal scrollability within each row",
+    "Check side nav: collapsed 60dp (icons only) vs expanded 240dp (icons + labels). Active icon is primary #6366F1",
+    "Verify the 1.05× scale-up on the focused card does not cause overlap with adjacent cards",
+    "Confirm 32px vertical gap between rows and 32px left margin on row headers"
+  ]
+}

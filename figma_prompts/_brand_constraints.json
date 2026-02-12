@@ -1,0 +1,44 @@
+{
+  "last_updated": "2026-02-11",
+  "source": "CLAUDE.md §17.5 defaults — update after each Figma Make run",
+  "typography": {
+    "caption": "12sp",
+    "body_small": "14sp",
+    "body_medium": "16sp",
+    "body_large": "18sp",
+    "title_small": "20sp",
+    "title_medium": "22sp",
+    "unit": "sp (never pt or dp)"
+  },
+  "colors": {
+    "primary": "#6366F1",
+    "error": "#EF4444",
+    "success": "#10B981",
+    "secondary_text": "#6B7280",
+    "background": "#F9FAFB",
+    "surface": "#FFFFFF",
+    "text_primary": "#121212"
+  },
+  "spacing": {
+    "base_unit": "4px",
+    "page_padding_horizontal": "16px",
+    "component_gap": "12px",
+    "section_gap": "24px"
+  },
+  "components": {
+    "style": "Material 3",
+    "corner_radius_card": "12px",
+    "corner_radius_button": "8px",
+    "corner_radius_input": "8px",
+    "min_button_height": "48dp",
+    "min_input_height": "48dp",
+    "min_tap_target": "48x48dp"
+  },
+  "auto_layout": "required on every frame",
+  "tv_overrides": {
+    "min_text_size": "18sp",
+    "min_tap_target": "80x80dp",
+    "focus_ring": "4px solid",
+    "base_frame": "1920x1080"
+  }
+}

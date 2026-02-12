@@ -1,0 +1,18 @@
+{
+  "ux_intent": "TEMPLATE. Fill bracketed placeholders with the specific screen's details after story B-7 defines the batch assignments. Purpose: validate that the migrated screen survives rotation, handles all required states, and matches the established ViewModel + Compose design pattern.",
+  "figma_make_prompt": "[TEMPLATE — replace every bracketed value before pasting into Figma Make]\n\nBuild a [Screen Name] screen for the Hoopla digital library app.\n\nPlatform: mobile (iOS and Android), 390x844 base frame.\nUse a [top app bar with title \"[Screen Title]\" and a back arrow / bottom navigation with [Active Tab] tab active].\n\nLayout:\n- [Vertical scroll / single viewport / grid]. Horizontal padding 16px.\n- [Describe the primary content area: what sections exist, what hierarchy they follow.]\n- [Describe each key element: what it shows, left/right/centre alignment, dimensions.]\n- [Describe any interactive elements: buttons, toggles, inputs, links — each with a touch target note.]\n\nStates:\n- Loading: [skeleton placeholder description — match the dimensions of the loaded content].\n- Default / Loaded: [describe the initial populated state with representative data].\n- Error: [inline error banner or full-screen error with a retry action].\n- [Any additional states this screen requires: empty, success, confirmation, selected item, etc.]\n\nBehavior:\n- When [primary action] is tapped → [outcome and state change].\n- When [secondary action] is tapped → [outcome].\n- [Network or error handling description].\n\nStyle:\n- Material 3-ish, neutral. Background #F9FAFB (list screens) or #FFFFFF (form / detail screens). Primary #6366F1. Error #EF4444. Success #10B981. Auto layout, responsive.\n- All tap targets ≥ 48x48dp. Body text ≥ 14sp. Headers ≥ 16sp.\n\nFirst step: [describe the single most important state to start the Make generation with — usually the default/loaded state with the primary interaction visible].",
+  "ui_acceptance_criteria": [
+    "Given the screen is in the loaded state\nWhen the user views it\nThen all primary content is visible and the layout matches the approved design",
+    "Given the screen is loading\nWhen the screen is rendered\nThen skeleton placeholders appear in the same dimensions as the loaded content and no raw data or broken layout is visible",
+    "Given the user performs the primary action on this screen\nWhen the action completes\nThen the expected state change or navigation occurs as described in the story",
+    "Given the screen encounters a network error\nWhen the error state is rendered\nThen an inline error with a retry action is visible and the user can recover without leaving the screen"
+  ],
+  "manual_validation_checklist": [
+    "Verify all interactive elements have touch targets ≥ 48x48dp",
+    "Confirm body text ≥ 14sp, headers ≥ 16sp. Check contrast: primary text on background ≥ 4.5:1, secondary text ≥ 3:1",
+    "Verify loading skeletons fill the same space as loaded content — no layout shift on transition",
+    "Confirm error state banner or message is visible and the retry CTA is a distinct tappable element",
+    "Check auto layout is applied: no overlapping elements at different content lengths or text sizes",
+    "Verify the screen matches the ViewModel pattern: state is exposed via the UI (not held in the view), and rotation would preserve visible content"
+  ]
+}

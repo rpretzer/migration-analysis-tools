@@ -1,0 +1,19 @@
+{
+  "ux_intent": "Validate the layout, states, and interaction patterns for the Video screen as described in story 'WCAG Phase 1 Fixes: contrast, tap targets, captions, custom-view accessibility, highlight colours'. The prototype should prove that the key user flows are visually clear and that accessibility requirements (tap targets, contrast, text sizing) are met.",
+  "figma_make_prompt": "Design a mobile screen for: Video.\n\n\nPlatform: Android/iOS phone. Base frame: 390 x 844.\nTop app bar with back arrow and screen title. Bottom navigation bar.\n\nLayout:\n  - Horizontal page padding: 16px\n  - Component gap: 12px\n  - Section gap: 24px\n\nKey elements (from story scope):\n  - Replace semi-transparent text colours (#afffffff, #8fffffff, textColorSecondary) with opaque theme tokens that meet WCAG 4.5:1 (normal text) or 3:1 (large text) contrast in both light and dark themes\n  - Increase audiobook-player transport-control tap targets (rewind, rewind-30, fast-forward, fast-forward-30) and the bookmark-delete button to 48x48 dp minimum\n  - Evaluate and update browse-card icon tap targets if they are interactive\n  - Add a caption-toggle button to the video player control bar\n  - Implement onInitializeAccessibilityNodeInfo and announceForAccessibility on SimpleRatingBar\n  - Implement announceForAccessibility on FavoriteButton for state-change events\n  - Replace generic highlight-colour content descriptions with descriptive colour names\n\nStates: Default state, Error state (show error message with retry button), Empty state (show placeholder message).\n\nBehavior:\n  - All interactive elements respond to tap with visual feedback.\n  - Navigation transitions use slide animation.\n\nStyle:\n  - Primary color: #6366F1\n  - Error color: #EF4444\n  - Background: #F9FAFB\n  - Surface: #FFFFFF\n  - Text primary: #121212\n  - Body text: 16sp\n  - Card corner radius: 12px\n  - Button corner radius: 8px\n  - Use auto layout on every frame.\n  - Material 3 design language.\n\nAll tap targets must be at least 48x48dp.\nAll body text at least 14sp.\nColour contrast must meet WCAG AA: 4.5:1 for normal text, 3:1 for large text.\n\nFirst step: Create the default state with all layout elements positioned and styled.",
+  "ui_acceptance_criteria": [
+    "Given the audiobook player is displayed\nWhen the tap-target dimensions are measured for all transport controls and the bookmark-delete button\nThen every target is at least 48x48 dp",
+    "Given the user is watching a video\nWhen the player controls are visible\nThen a caption-toggle button is present in the control bar (not buried in a menu) and has a clear contentDescription",
+    "Given the user has TalkBack enabled and taps the favourite button\nWhen the favourite state toggles\nThen TalkBack announces \"Added to favourites\" or \"Removed from favourites\""
+  ],
+  "manual_validation_checklist": [
+    "Layout spacing matches spec: page padding 16px, component gap 12px, section gap 24px",
+    "All three states present: default, error, empty",
+    "All tap targets are at least 48x48dp",
+    "Colour contrast meets WCAG AA: 4.5:1 normal text, 3:1 large text",
+    "Body text is at least 14sp",
+    "Auto layout is applied to every frame",
+    "Card corners are 12px, button corners are 8px",
+    "Responsive: content reflows correctly if frame width changes by ±50px"
+  ]
+}

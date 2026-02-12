@@ -1,0 +1,39 @@
+# Security — NEVER commit credential files
+analysis/SECURITY_FINDINGS.md
+
+# Decompiled APK binaries and source (large, regenerable)
+*.apk
+decompiled/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
+# Claude Code internal
+.claude/
+
+# Jira sync temp files
+docs/.epic_keys.json
+docs/.story_keys.json
+
+# Cost tracking (may contain usage patterns)
+docs/cost_log.json
+
+# Environment files
+.env
+.env.*
