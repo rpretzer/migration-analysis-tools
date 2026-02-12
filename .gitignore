@@ -34,6 +34,9 @@ docs/.story_keys.json
 # Cost tracking (may contain usage patterns)
 docs/cost_log.json
 
+# Output archives (local version history, not for repo)
+archive/
+
 # Environment files
 .env
 .env.*

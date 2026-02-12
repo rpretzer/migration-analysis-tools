@@ -366,6 +366,14 @@ def main():
 
             prompt_data = generate_prompt(story, [screen], brand)
 
+            # Archive previous version before overwriting
+            if os.path.isfile(output_file):
+                try:
+                    from archive import archive_before_write
+                    archive_before_write(output_file)
+                except ImportError:
+                    pass
+
             with open(output_file, "w", encoding="utf-8") as f:
                 json.dump(prompt_data, f, indent=2, ensure_ascii=False)
 

@@ -386,6 +386,14 @@ def main():
     actuals = load_json(args.actuals)
     document = generate_evaluation(business_case, actuals)
 
+    # Archive previous version before overwriting
+    if os.path.isfile(args.output):
+        try:
+            from archive import archive_before_write
+            archive_before_write(args.output)
+        except ImportError:
+            pass
+
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
     with open(args.output, "w", encoding="utf-8") as f:
         f.write(document)

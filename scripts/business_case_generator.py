@@ -581,6 +581,14 @@ def main():
 
     document = generate_business_case(data)
 
+    # Archive previous version before overwriting
+    if os.path.isfile(args.output):
+        try:
+            from archive import archive_before_write
+            archive_before_write(args.output)
+        except ImportError:
+            pass  # archive module not on path; skip
+
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
     with open(args.output, "w", encoding="utf-8") as f:
         f.write(document)

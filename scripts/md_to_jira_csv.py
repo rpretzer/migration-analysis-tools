@@ -10,6 +10,7 @@ Usage:
 """
 
 import csv
+import os
 import re
 import sys
 import argparse
@@ -81,6 +82,14 @@ def issues_to_csv(issues: list[dict], output_path: str):
         "Epic Link",
         "Phase",
     ]
+
+    # Archive previous version before overwriting
+    if os.path.isfile(output_path):
+        try:
+            from archive import archive_before_write
+            archive_before_write(output_path)
+        except ImportError:
+            pass
 
     with open(output_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
