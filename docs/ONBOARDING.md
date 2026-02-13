@@ -178,6 +178,23 @@ python3 scripts/validate_figma_prompt.py --check-schema
 # Should print schema validation OK
 ```
 
+### 5.5 Analyst Dashboard (optional)
+
+The dashboard lets you review progress, track objectives, and read generated documents in the browser. Use it alongside Claude Code during analysis.
+
+```bash
+bash scripts/start-dashboard.sh
+# Or: cd dashboard && npm install && npm start
+```
+
+Open http://localhost:3456 in your browser. To use a different port:
+
+```bash
+DASHBOARD_PORT=4000 npm start
+```
+
+See `dashboard/README.md` for details.
+
 ---
 
 ## 6. Configure Claude Code for this project
@@ -356,3 +373,4 @@ Before starting your first analysis, confirm all of these:
 - [ ] You have read CLAUDE.md §0–§4
 - [ ] You have read docs/TRAINING_PROCESS.md
 - [ ] You have read docs/operations/COST_AND_MODEL_STRATEGY.md
+- [ ] Optional: Dashboard running (`cd dashboard && npm install && npm start`) for progress review

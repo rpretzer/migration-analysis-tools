@@ -1,0 +1,14 @@
+{
+  "name": "migration-analysis-dashboard",
+  "version": "1.0.0",
+  "description": "Analyst dashboard for migration analysis progress and document review",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "marked": "^11.0.0"
+  }
+}

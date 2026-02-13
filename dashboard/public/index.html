@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Migration Analysis Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <div class="layout">
+    <header class="header">
+      <h1>Migration Analysis Dashboard</h1>
+      <div class="header-actions">
+        <button type="button" class="btn btn-secondary" id="btn-refresh">Refresh</button>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <nav class="sidebar-section">
+        <h2>Overview</h2>
+        <ul class="nav-list">
+          <li><a href="#" data-panel="progress">Progress</a></li>
+          <li><a href="#" data-panel="objectives">Objectives</a></li>
+          <li><a href="#" data-panel="documents">Documents</a></li>
+          <li><a href="#" data-panel="stories">Stories</a></li>
+          <li><a href="#" data-panel="archives">Archives</a></li>
+        </ul>
+      </nav>
+      <div class="sidebar-section" id="quick-links">
+        <h2>Quick links</h2>
+        <ul class="nav-list" id="quick-links-list">
+          <li><a href="#" data-path="analysis/ANALYSIS_LOG.md">Analysis log</a></li>
+          <li><a href="#" data-path="docs/ROADMAP.md">Roadmap</a></li>
+          <li><a href="#" data-path="docs/CRITICAL_PATH_ANALYSIS.md">Critical path</a></li>
+          <li><a href="#" data-path="analysis/PROJECT_STRUCTURE.md">Project structure</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="panel active" id="panel-progress">
+        <h2>Progress</h2>
+        <div class="phase-summary" id="phase-summary"></div>
+        <div class="artifact-list" id="artifact-list"></div>
+      </section>
+
+      <section class="panel" id="panel-objectives">
+        <h2>Objectives</h2>
+        <div class="objective-list" id="objective-list"></div>
+      </section>
+
+      <section class="panel" id="panel-documents">
+        <h2>Documents</h2>
+        <p style="color:var(--text-secondary);margin-bottom:var(--component-gap)">Click a file to open it. Use the sidebar for quick links.</p>
+        <div id="doc-browser"></div>
+      </section>
+
+      <section class="panel" id="panel-stories">
+        <h2>Stories</h2>
+        <div class="story-list" id="story-list"></div>
+      </section>
+
+      <section class="panel" id="panel-archives">
+        <h2>Archives</h2>
+        <div class="archive-list" id="archive-list"></div>
+      </section>
+
+      <section class="panel" id="panel-viewer">
+        <div class="doc-viewer">
+          <div class="doc-viewer-header">
+            <button type="button" class="btn btn-secondary" id="viewer-back">← Back</button>
+            <span class="doc-path" id="viewer-path"></span>
+          </div>
+          <div class="doc-content" id="viewer-content"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

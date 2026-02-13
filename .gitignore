@@ -5,6 +5,9 @@ analysis/SECURITY_FINDINGS.md
 *.apk
 decompiled/
 
+# Dashboard
+dashboard/node_modules/
+
 # Python
 __pycache__/
 *.pyc
