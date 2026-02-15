@@ -52,6 +52,41 @@ const OBJECTIVES = [
   { id: 15, name: "Claude-to-Figma Make workflow", artifacts: ["figma_prompts/"], phase: 4 },
 ];
 
+// Skills in .cursor/skills/
+const SKILLS = [
+  { name: "migration-analysis", path: ".cursor/skills/migration-analysis/SKILL.md", description: "Core workflow: model selection, artifact pipeline, code exploration. Use for structure mapping, roadmaps, analysis artifacts." },
+  { name: "migration-kmp-classification", path: ".cursor/skills/migration-kmp-classification/SKILL.md", description: "Classify modules as KMP candidate vs native modernize vs native refactor. Use when deciding what to share vs keep platform-specific." },
+  { name: "migration-story-writing", path: ".cursor/skills/migration-story-writing/SKILL.md", description: "User stories with Gherkin ACs. Use when writing stories for KMP, modernization, WCAG, or testing." },
+  { name: "migration-wcag-audit", path: ".cursor/skills/migration-wcag-audit/SKILL.md", description: "WCAG 2.1 AA audit for mobile. Use when auditing screens for accessibility." },
+];
+
+const SKILLS_EXPLAINER = {
+  cursor: {
+    title: "Cursor",
+    steps: [
+      "Project skills live in .cursor/skills/ and are auto-discovered when you open this project.",
+      "Cursor loads them on demand — the agent sees skill metadata first, then full content when relevant.",
+      "To invoke: Ask for the task by name (e.g., \"Classify these modules for KMP\" or \"Write a migration story\") and the agent will use the matching skill.",
+    ],
+  },
+  claudeCode: {
+    title: "Claude Code",
+    steps: [
+      "Claude Code reads CLAUDE.md from the project root. Skills add focused workflows on top.",
+      "To use: Reference the skill in your prompt (e.g., \"Follow migration-kmp-classification when classifying modules\") or paste the SKILL.md path so Claude loads it.",
+      "Skills are in .cursor/skills/ — you can @-mention the file or add a reference in CLAUDE.md.",
+    ],
+  },
+  other: {
+    title: "Other tools (Windsurf, Codeium, Zed, etc.)",
+    steps: [
+      "Most AI coding tools support project rules or custom instructions.",
+      "Copy the SKILL.md content into your tool's rules, instructions, or project context.",
+      "Or add .cursor/skills/ to include paths so the tool reads skill files when needed.",
+    ],
+  },
+};
+
 function safePath(relativePath) {
   const resolved = path.resolve(PROJECT_ROOT, relativePath.replace(/\.\./g, ""));
   if (!resolved.startsWith(PROJECT_ROOT)) return null;
@@ -146,6 +181,10 @@ app.get("/api/artifacts", async (_req, res) => {
   }
 });
 
+app.get("/api/skills", (_req, res) => {
+  res.json({ skills: SKILLS, explainer: SKILLS_EXPLAINER });
+});
+
 app.get("/api/objectives", async (_req, res) => {
   try {
     const results = [];
@@ -187,9 +226,37 @@ app.get("/api/archives", async (_req, res) => {
   }
 });
 
+// Root-level key documents (not in a subdirectory)
+const ROOT_DOCS = ["CLAUDE.md"];
+
 app.get("/api/tree", async (_req, res) => {
   const dirs = ["analysis", "docs", "stories", "figma_prompts", "archive"];
-  const tree = {};
+  const tree = { root: [] };
+  for (const name of ROOT_DOCS) {
+    const fullPath = path.join(PROJECT_ROOT, name);
+    try {
+      const stat = await fs.stat(fullPath);
+      if (stat.isFile()) tree.root.push({ name, type: "file", path: name });
+    } catch {
+      /* skip if missing */
+    }
+  }
+  tree.root.sort((a, b) => a.name.localeCompare(b.name));
+  // Skills from .cursor/skills/
+  tree.skills = [];
+  try {
+    const skillsDir = path.join(PROJECT_ROOT, ".cursor", "skills");
+    const skillDirs = await fs.readdir(skillsDir, { withFileTypes: true });
+    for (const d of skillDirs.filter((e) => e.isDirectory())) {
+      const skillPath = path.join(skillsDir, d.name, "SKILL.md");
+      if (await fileExists(skillPath)) {
+        tree.skills.push({ name: `${d.name}/SKILL.md`, type: "file", path: `.cursor/skills/${d.name}/SKILL.md` });
+      }
+    }
+    tree.skills.sort((a, b) => a.name.localeCompare(b.name));
+  } catch {
+    tree.skills = [];
+  }
   for (const dir of dirs) {
     const fullPath = path.join(PROJECT_ROOT, dir);
     try {

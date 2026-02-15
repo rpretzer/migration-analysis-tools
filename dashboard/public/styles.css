@@ -456,6 +456,79 @@ body {
   margin-right: var(--section-gap);
 }
 
+/* Skills */
+.skills-intro {
+  color: var(--text-secondary);
+  margin-bottom: var(--section-gap);
+  max-width: 600px;
+}
+
+.skill-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--component-gap);
+  margin-bottom: var(--section-gap);
+}
+
+.skill-card {
+  background: var(--surface);
+  border-radius: var(--corner-card);
+  border: 1px solid var(--outline);
+  padding: var(--page-padding);
+}
+
+.skill-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--component-gap);
+  margin-bottom: 8px;
+}
+
+.skill-name {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  background: var(--surface-variant);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.skill-desc {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.skills-explainer {
+  margin-top: var(--section-gap);
+  padding-top: var(--section-gap);
+  border-top: 1px solid var(--outline);
+}
+
+.skills-explainer h3 {
+  margin: 0 0 var(--component-gap);
+  font-size: 16px;
+}
+
+.explainer-block {
+  margin-bottom: var(--section-gap);
+}
+
+.explainer-block h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--primary);
+}
+
+.explainer-block ol {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 .empty-state {
   text-align: center;
   padding: var(--section-gap);

@@ -95,12 +95,13 @@ async function loadObjectives() {
 async function loadDocTree() {
   const tree = await fetchJson(`${API}/tree`);
   const browser = $("#doc-browser");
-  const sections = ["analysis", "docs", "stories", "figma_prompts"];
+  const sections = ["root", "skills", "analysis", "docs", "stories", "figma_prompts"];
+  const sectionLabels = { root: "Project", skills: "Skills", analysis: "analysis", docs: "docs", stories: "stories", figma_prompts: "figma_prompts" };
   browser.innerHTML = sections
     .map(
       (section) => `
     <div class="sidebar-section doc-browser-section">
-      <h2>${section}</h2>
+      <h2>${sectionLabels[section] || section}</h2>
       <ul class="nav-list">
         ${(tree[section] || [])
           .filter((e) => e.type === "file")
@@ -227,6 +228,44 @@ async function loadArchives() {
   });
 }
 
+// Skills
+async function loadSkills() {
+  const { skills, explainer } = await fetchJson(`${API}/skills`);
+  const listEl = $("#skill-list");
+  listEl.innerHTML = skills
+    .map(
+      (s) => `
+    <div class="skill-card">
+      <div class="skill-header">
+        <code class="skill-name">${escapeHtml(s.name)}</code>
+        <button class="btn btn-secondary" data-path="${escapeHtml(s.path)}">Open</button>
+      </div>
+      <p class="skill-desc">${escapeHtml(s.description)}</p>
+    </div>`
+    )
+    .join("");
+
+  listEl.querySelectorAll("[data-path]").forEach((btn) => {
+    btn.addEventListener("click", () => openDocument(btn.dataset.path));
+  });
+
+  const explainerEl = $("#skills-explainer");
+  explainerEl.innerHTML = `
+    <h3>How to enable in your AI tool</h3>
+    ${Object.values(explainer)
+      .map(
+        (e) => `
+      <div class="explainer-block">
+        <h4>${escapeHtml(e.title)}</h4>
+        <ol>
+          ${e.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}
+        </ol>
+      </div>`
+      )
+      .join("")}
+  `;
+}
+
 async function openArchiveDocument(snapshot, path) {
   showPanel("viewer");
   $("#viewer-path").textContent = `archive/${snapshot}/${path}`;
@@ -247,7 +286,11 @@ function initQuickLinks() {
   $$("#quick-links-list a").forEach((a) => {
     a.addEventListener("click", (e) => {
       e.preventDefault();
-      openDocument(a.dataset.path);
+      if (a.dataset.panel) {
+        showPanel(a.dataset.panel);
+      } else if (a.dataset.path) {
+        openDocument(a.dataset.path);
+      }
     });
   });
 }
@@ -268,12 +311,12 @@ function formatDate(iso) {
 
 // Refresh all data
 async function refresh() {
-  const panels = ["progress", "objectives", "stories", "archives"];
   await Promise.all([
     loadProgress(),
     loadObjectives(),
     loadStories(),
     loadArchives(),
+    loadSkills(),
   ]);
   loadDocTree();
 }
