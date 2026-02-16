@@ -40,6 +40,9 @@ docs/cost_log.json
 # Output archives (local version history, not for repo)
 archive/
 
+# Client review bundle (generated, share separately)
+bundle/
+
 # Environment files
 .env
 .env.*

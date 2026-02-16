@@ -93,31 +93,43 @@ async function loadObjectives() {
 
 // Document tree and viewer
 async function loadDocTree() {
-  const tree = await fetchJson(`${API}/tree`);
   const browser = $("#doc-browser");
-  const sections = ["root", "skills", "analysis", "docs", "stories", "figma_prompts"];
-  const sectionLabels = { root: "Project", skills: "Skills", analysis: "analysis", docs: "docs", stories: "stories", figma_prompts: "figma_prompts" };
-  browser.innerHTML = sections
-    .map(
-      (section) => `
+  if (!browser) return;
+  try {
+    const tree = await fetchJson(`${API}/tree`);
+    const sections = ["root", "skills", "analysis", "docs", "stories", "figma_prompts"];
+    const sectionLabels = { root: "Project", skills: "Skills", analysis: "analysis", docs: "docs", stories: "stories", figma_prompts: "figma_prompts" };
+    const items = sections
+      .map((section) => {
+        const list = (tree[section] || []).filter((e) => e && e.type === "file");
+        return { section, label: sectionLabels[section] || section, list };
+      })
+      .filter(({ list }) => list.length > 0);
+    if (items.length === 0) {
+      browser.innerHTML = '<div class="empty-state">No documents found. Ensure the dashboard server is running from the project root.</div>';
+      return;
+    }
+    browser.innerHTML = items
+      .map(
+        ({ section, label, list }) => `
     <div class="sidebar-section doc-browser-section">
-      <h2>${sectionLabels[section] || section}</h2>
+      <h2>${escapeHtml(label)}</h2>
       <ul class="nav-list">
-        ${(tree[section] || [])
-          .filter((e) => e.type === "file")
-          .map((e) => `<li><a href="#" data-path="${escapeHtml(e.path)}">${escapeHtml(e.name)}</a></li>`)
-          .join("")}
+        ${list.map((e) => `<li><a href="#" data-path="${escapeHtml(e.path)}">${escapeHtml(e.name)}</a></li>`).join("")}
       </ul>
     </div>`
-    )
-    .join("");
+      )
+      .join("");
 
-  browser.querySelectorAll("a[data-path]").forEach((a) => {
-    a.addEventListener("click", (e) => {
-      e.preventDefault();
-      openDocument(a.dataset.path);
+    browser.querySelectorAll("a[data-path]").forEach((a) => {
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        openDocument(a.dataset.path);
+      });
     });
-  });
+  } catch (err) {
+    browser.innerHTML = `<div class="empty-state">Failed to load documents: ${escapeHtml(err.message)}. Check the server is running.</div>`;
+  }
 }
 
 async function openDocument(path, snapshot = null) {
@@ -281,6 +293,16 @@ async function openArchiveDocument(snapshot, path) {
   }
 }
 
+// Sidebar skill links
+function initSidebarSkills() {
+  $$("#sidebar-skill-list a").forEach((a) => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      openDocument(a.dataset.path);
+    });
+  });
+}
+
 // Quick links
 function initQuickLinks() {
   $$("#quick-links-list a").forEach((a) => {
@@ -311,14 +333,18 @@ function formatDate(iso) {
 
 // Refresh all data
 async function refresh() {
-  await Promise.all([
+  const loads = [
     loadProgress(),
     loadObjectives(),
     loadStories(),
     loadArchives(),
     loadSkills(),
-  ]);
-  loadDocTree();
+    loadDocTree(),
+  ];
+  const results = await Promise.allSettled(loads);
+  results.forEach((r, i) => {
+    if (r.status === "rejected") console.warn("Dashboard load failed:", ["progress", "objectives", "stories", "archives", "skills", "docTree"][i], r.reason);
+  });
 }
 
 // Init
@@ -338,6 +364,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   $("#viewer-back").addEventListener("click", () => showPanel("documents"));
 
+  initSidebarSkills();
   initQuickLinks();
   await refresh();
 });

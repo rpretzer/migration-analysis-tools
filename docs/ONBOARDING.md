@@ -178,9 +178,19 @@ python3 scripts/validate_figma_prompt.py --check-schema
 # Should print schema validation OK
 ```
 
-### 5.5 Analyst Dashboard (optional)
+### 5.5 Client review bundle (for sharing)
 
-The dashboard lets you review progress, track objectives, and read generated documents in the browser. Use it alongside Claude Code during analysis.
+To share the analysis with client collaborators for async review:
+
+```bash
+node scripts/build-bundle.js
+```
+
+This creates a `bundle/` folder. Zip it or upload to cloud storage. Clients open `index.html` in a browser — no server or install required. See `docs/BUNDLE_FOR_CLIENT.md` for details.
+
+### 5.6 Analyst Dashboard (optional)
+
+The dashboard lets you review progress, track objectives, and read generated documents in the browser. Use it alongside Claude Code during analysis. For client sharing, use the static bundle (5.5) instead.
 
 ```bash
 bash scripts/start-dashboard.sh
