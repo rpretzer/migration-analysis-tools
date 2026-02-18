@@ -77,7 +77,7 @@ async function loadOverview() {
       <div class="metric-card" data-goto="mcp">
         <div class="metric-label">MCP Servers</div>
         <div class="metric-value">${data.mcpServers}/${data.mcpServersTotal}</div>
-        <div class="metric-detail">${data.mcpServers === data.mcpServersTotal ? "All implemented" : `${data.mcpServersTotal - data.mcpServers} pending`}</div>
+        <div class="metric-detail">${data.mcpServers} implemented, ${data.mcpServersTotal - data.mcpServers} awaiting dependencies</div>
       </div>
     `;
     grid.querySelectorAll("[data-goto]").forEach((card) => {
@@ -349,9 +349,9 @@ async function loadMcpServers() {
       <div class="mcp-card">
         <div class="mcp-card-header">
           <span class="mcp-name">${escapeHtml(s.name)}</span>
-          <span class="mcp-impl-badge ${s.implemented ? "implemented" : "stub"}">${s.implemented ? "Implemented" : "Stub"}</span>
+          <span class="mcp-impl-badge ${escapeHtml(s.status)}">${escapeHtml(s.statusLabel)}</span>
         </div>
-        ${s.description ? `<div class="mcp-desc">${escapeHtml(s.description)}</div>` : ""}
+        ${s.detail ? `<div class="mcp-desc">${escapeHtml(s.detail)}</div>` : s.description ? `<div class="mcp-desc">${escapeHtml(s.description)}</div>` : ""}
         <div class="mcp-path">${escapeHtml(s.path)}</div>
       </div>`)
       .join("");

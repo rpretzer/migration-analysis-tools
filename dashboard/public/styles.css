@@ -466,8 +466,9 @@ body {
   border-radius: 4px;
 }
 
-.mcp-impl-badge.implemented { background: #d1fae5; color: #065f46; }
-.mcp-impl-badge.stub { background: var(--surface-variant); color: var(--text-tertiary); }
+.mcp-impl-badge.substantive { background: #d1fae5; color: #065f46; }
+.mcp-impl-badge.scaffolded { background: #fef3c7; color: #92400e; }
+.mcp-impl-badge.placeholder { background: var(--surface-variant); color: var(--text-tertiary); }
 
 .mcp-desc {
   font-size: 12px;

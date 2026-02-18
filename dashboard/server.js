@@ -35,6 +35,20 @@ const ANALYSIS_ARTIFACTS = [
   { id: 14, name: "Training process", path: "docs/TRAINING_PROCESS.md", phase: 5, gate: "Tested by at least one non-author" },
 ];
 
+// MCP server status registry — manually curated based on actual implementation audit.
+// "substantive": Real logic, reads/writes data, makes API calls.
+// "scaffolded": Infrastructure exists but blocked on missing dependencies (e.g. validation scripts).
+// "placeholder": Returns NOT_CONFIGURED on every call; architecture only.
+const MCP_SERVER_STATUS = {
+  "analytics":      { status: "placeholder",  statusLabel: "Placeholder",  detail: "Architecture defined. Returns NOT_CONFIGURED. Awaiting analytics platform selection." },
+  "current-state":  { status: "substantive",  statusLabel: "Implemented",  detail: "Reads and parses state files with regex parsing and filtering. 6 tools." },
+  "design-system":  { status: "substantive",  statusLabel: "Implemented",  detail: "3-tier token priority, Material 3 specs, generates Figma prompt JSON. 6 tools." },
+  "integration":    { status: "substantive",  statusLabel: "Implemented",  detail: "Live HTTP calls to Jira, GitHub, and LaunchDarkly APIs. Requires env vars. 8 tools." },
+  "observability":  { status: "substantive",  statusLabel: "Implemented",  detail: "Append-only JSONL log, filtered queries, computes 5 real metrics. 4 tools." },
+  "pipeline":       { status: "substantive",  statusLabel: "Implemented",  detail: "Atomic stage-machine state in status.json with transition validation. 4 tools." },
+  "validation":     { status: "scaffolded",   statusLabel: "Scaffolded",   detail: "Script-runner infrastructure exists. Blocked on 4 of 5 Python validation scripts." },
+};
+
 // Agent definitions with model preferences
 const AGENT_DEFS = [
   { name: "Coach", model: "Opus", role: "methodology/roles/coach.md", github: ".github/agents/coach.agent.md", claude: ".claude/agents/coach.md", description: "Guides PM/PO through structured inquiry. Produces business cases, epics, and stories." },
@@ -150,11 +164,15 @@ async function discoverMcpServers() {
       } catch { /* no package.json */ }
       const srcPath = path.join(mcpDir, d.name, "src", "index.js");
       const hasSrc = await fileExists(srcPath);
+      const meta = MCP_SERVER_STATUS[d.name] || { status: hasSrc ? "substantive" : "placeholder", statusLabel: hasSrc ? "Implemented" : "Missing", detail: "" };
       servers.push({
         name: d.name,
         path: `pipeline/mcp-servers/${d.name}`,
         description: pkg?.description || "",
-        implemented: hasSrc,
+        hasSrc,
+        status: meta.status,
+        statusLabel: meta.statusLabel,
+        detail: meta.detail,
       });
     }
     servers.sort((a, b) => a.name.localeCompare(b.name));
@@ -226,7 +244,7 @@ app.get("/api/overview", async (_req, res) => {
       figmaPrompts: figmaCount,
       agents: AGENT_DEFS.length,
       skills: skills.length,
-      mcpServers: mcpServers.filter((s) => s.implemented).length,
+      mcpServers: mcpServers.filter((s) => s.status === "substantive").length,
       mcpServersTotal: mcpServers.length,
       pipelineStatus: pipelineStatus.status || "unknown",
     });
