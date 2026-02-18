@@ -3,90 +3,152 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Migration Analysis Dashboard</title>
+  <title>Hoopla Digital — Development Pipeline</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
   <div class="layout">
     <header class="header">
-      <h1>Migration Analysis Dashboard</h1>
+      <div class="header-brand">
+        <svg class="brand-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <rect width="28" height="28" rx="6" fill="#6366F1"/>
+          <path d="M8 20V8l6 4 6-4v12l-6-4-6 4z" fill="white"/>
+        </svg>
+        <div class="brand-text">
+          <span class="brand-name">Hoopla Digital</span>
+          <span class="brand-subtitle">Development Pipeline</span>
+        </div>
+      </div>
       <div class="header-actions">
+        <a href="/coach/" target="_blank" class="btn btn-coach" title="Open Product Development Coach">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 3h12v8H4l-2 2V3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Launch Coach
+        </a>
         <button type="button" class="btn btn-secondary" id="btn-refresh">Refresh</button>
       </div>
     </header>
 
     <aside class="sidebar">
-      <nav class="sidebar-section">
-        <h2>Overview</h2>
+      <nav>
+        <ul class="nav-list">
+          <li><a href="#" data-panel="overview" class="active">Overview</a></li>
+        </ul>
+
+        <div class="nav-group-label">Analysis</div>
         <ul class="nav-list">
           <li><a href="#" data-panel="progress">Progress</a></li>
-          <li><a href="#" data-panel="objectives">Objectives</a></li>
-          <li><a href="#" data-panel="documents">Documents</a></li>
           <li><a href="#" data-panel="stories">Stories</a></li>
+          <li><a href="#" data-panel="figma">Figma Prompts</a></li>
+          <li><a href="#" data-panel="documents">Documents</a></li>
           <li><a href="#" data-panel="archives">Archives</a></li>
+        </ul>
+
+        <div class="nav-group-label">Pipeline</div>
+        <ul class="nav-list">
+          <li><a href="#" data-panel="agents">Agents</a></li>
           <li><a href="#" data-panel="skills">Skills</a></li>
+          <li><a href="#" data-panel="mcp">MCP Servers</a></li>
+          <li><a href="#" data-panel="methodology">Methodology</a></li>
+          <li><a href="#" data-panel="observability">Observability</a></li>
+        </ul>
+
+        <div class="nav-group-label">Quick Links</div>
+        <ul class="nav-list nav-quick">
+          <li><a href="#" data-path="CLAUDE.md">CLAUDE.md</a></li>
+          <li><a href="#" data-path="AGENTS.md">AGENTS.md</a></li>
+          <li><a href="#" data-path="docs/operations/PIPELINE_STRATEGY.md">Pipeline Strategy</a></li>
+          <li><a href="#" data-path="docs/EXECUTIVE_SUMMARY.md">Executive Summary</a></li>
+          <li><a href="#" data-path="docs/CLAUDE_CODE_SELL_SHEET.md">Sell Sheet</a></li>
         </ul>
       </nav>
-      <div class="sidebar-section" id="sidebar-skills">
-        <h2>Skills</h2>
-        <ul class="nav-list" id="sidebar-skill-list">
-          <li><a href="#" data-path=".cursor/skills/migration-analysis/SKILL.md">migration-analysis</a></li>
-          <li><a href="#" data-path=".cursor/skills/migration-kmp-classification/SKILL.md">migration-kmp-classification</a></li>
-          <li><a href="#" data-path=".cursor/skills/migration-story-writing/SKILL.md">migration-story-writing</a></li>
-          <li><a href="#" data-path=".cursor/skills/migration-wcag-audit/SKILL.md">migration-wcag-audit</a></li>
-        </ul>
-      </div>
-      <div class="sidebar-section" id="quick-links">
-        <h2>Quick links</h2>
-        <ul class="nav-list" id="quick-links-list">
-          <li><a href="#" data-path="CLAUDE.md">CLAUDE.md</a></li>
-          <li><a href="#" data-path="analysis/ANALYSIS_LOG.md">Analysis log</a></li>
-          <li><a href="#" data-path="docs/ROADMAP.md">Roadmap</a></li>
-          <li><a href="#" data-path="docs/CRITICAL_PATH_ANALYSIS.md">Critical path</a></li>
-          <li><a href="#" data-path="analysis/PROJECT_STRUCTURE.md">Project structure</a></li>
-        </ul>
-      </div>
     </aside>
 
     <main class="main">
-      <section class="panel active" id="panel-progress">
-        <h2>Progress</h2>
+      <!-- Overview -->
+      <section class="panel active" id="panel-overview">
+        <h2>Overview</h2>
+        <p class="panel-desc">At-a-glance status of the analysis artifacts and development pipeline.</p>
+        <div class="overview-grid" id="overview-grid"></div>
+      </section>
+
+      <!-- Progress -->
+      <section class="panel" id="panel-progress">
+        <h2>Analysis Progress</h2>
         <div class="phase-summary" id="phase-summary"></div>
         <div class="artifact-list" id="artifact-list"></div>
       </section>
 
-      <section class="panel" id="panel-objectives">
-        <h2>Objectives</h2>
-        <div class="objective-list" id="objective-list"></div>
-      </section>
-
-      <section class="panel" id="panel-documents">
-        <h2>Documents</h2>
-        <p style="color:var(--text-secondary);margin-bottom:var(--component-gap)">Click a file to open it. Use the sidebar for quick links.</p>
-        <div id="doc-browser"></div>
-      </section>
-
+      <!-- Stories -->
       <section class="panel" id="panel-stories">
-        <h2>Stories</h2>
+        <h2>User Stories</h2>
+        <p class="panel-desc">Migration stories with Gherkin acceptance criteria and effort estimates.</p>
         <div class="story-list" id="story-list"></div>
       </section>
 
+      <!-- Figma Prompts -->
+      <section class="panel" id="panel-figma">
+        <h2>Figma Prompts</h2>
+        <p class="panel-desc">Auto-generated Figma Make prompts for UI-bearing stories.</p>
+        <div class="figma-list" id="figma-list"></div>
+      </section>
+
+      <!-- Documents -->
+      <section class="panel" id="panel-documents">
+        <h2>Documents</h2>
+        <p class="panel-desc">Browse all project documents. Click a file to open it.</p>
+        <div id="doc-browser"></div>
+      </section>
+
+      <!-- Archives -->
       <section class="panel" id="panel-archives">
         <h2>Archives</h2>
         <div class="archive-list" id="archive-list"></div>
       </section>
 
-      <section class="panel" id="panel-skills">
-        <h2>Skills</h2>
-        <p class="skills-intro">Project-specific skills that extend AI assistants for migration analysis. Enable them in your tool to get structured guidance for structure mapping, KMP classification, story writing, and WCAG audits.</p>
-        <div class="skill-list" id="skill-list"></div>
-        <div class="skills-explainer" id="skills-explainer"></div>
+      <!-- Agents -->
+      <section class="panel" id="panel-agents">
+        <h2>Pipeline Agents</h2>
+        <p class="panel-desc">Seven AI agents that compose the development pipeline. Each has a portable methodology role, a GitHub Copilot agent definition, and a Claude Code agent definition.</p>
+        <div class="agent-list" id="agent-list"></div>
       </section>
 
+      <!-- Skills -->
+      <section class="panel" id="panel-skills">
+        <h2>Skills</h2>
+        <p class="panel-desc">Specialized instruction sets that extend agent capabilities. Auto-discovered from <code>.github/skills/</code>.</p>
+        <div class="skill-list" id="skill-list"></div>
+      </section>
+
+      <!-- MCP Servers -->
+      <section class="panel" id="panel-mcp">
+        <h2>MCP Servers</h2>
+        <p class="panel-desc">Model Context Protocol servers that expose structured context and tools to agents.</p>
+        <div class="mcp-list" id="mcp-list"></div>
+      </section>
+
+      <!-- Methodology -->
+      <section class="panel" id="panel-methodology">
+        <h2>Methodology</h2>
+        <p class="panel-desc">Portable, vendor-neutral methodology files. The source of truth that both GitHub and Claude implementations derive from.</p>
+        <div id="methodology-browser"></div>
+      </section>
+
+      <!-- Observability -->
+      <section class="panel" id="panel-observability">
+        <h2>Observability</h2>
+        <p class="panel-desc">Pipeline status and event log. Every agent decision is traced.</p>
+        <div class="obs-status" id="obs-status"></div>
+        <h3 class="obs-events-heading">Recent Events</h3>
+        <div class="obs-events" id="obs-events"></div>
+      </section>
+
+      <!-- Document Viewer -->
       <section class="panel" id="panel-viewer">
         <div class="doc-viewer">
           <div class="doc-viewer-header">
