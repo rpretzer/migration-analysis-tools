@@ -46,7 +46,7 @@ const MCP_SERVER_STATUS = {
   "integration":    { status: "substantive",  statusLabel: "Implemented",  detail: "Live HTTP calls to Jira, GitHub, and LaunchDarkly APIs. Requires env vars. 8 tools." },
   "observability":  { status: "substantive",  statusLabel: "Implemented",  detail: "Append-only JSONL log, filtered queries, computes 5 real metrics. 4 tools." },
   "pipeline":       { status: "substantive",  statusLabel: "Implemented",  detail: "Atomic stage-machine state in status.json with transition validation. 4 tools." },
-  "validation":     { status: "scaffolded",   statusLabel: "Scaffolded",   detail: "Script-runner infrastructure exists. Blocked on 4 of 5 Python validation scripts." },
+  "validation":     { status: "scaffolded",   statusLabel: "Scaffolded",   detail: "Script-runner infrastructure with 5 tools. 2 of 5 validation scripts operational (story, figma_prompt). 3 awaiting implementation." },
 };
 
 // Agent definitions with model preferences
@@ -247,6 +247,7 @@ app.get("/api/overview", async (_req, res) => {
       mcpServers: mcpServers.filter((s) => s.status === "substantive").length,
       mcpServersTotal: mcpServers.length,
       pipelineStatus: pipelineStatus.status || "unknown",
+      pipelineNotes: pipelineStatus.notes || "",
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

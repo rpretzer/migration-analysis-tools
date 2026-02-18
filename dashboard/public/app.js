@@ -62,7 +62,7 @@ async function loadOverview() {
       <div class="metric-card metric-status" data-goto="observability">
         <div class="metric-label">Pipeline Status</div>
         <div class="metric-value">${escapeHtml(data.pipelineStatus)}</div>
-        <div class="metric-detail">Awaiting repo access</div>
+        <div class="metric-detail">${escapeHtml(data.pipelineNotes || "")}</div>
       </div>
       <div class="metric-card" data-goto="agents">
         <div class="metric-label">Agents</div>
@@ -77,7 +77,7 @@ async function loadOverview() {
       <div class="metric-card" data-goto="mcp">
         <div class="metric-label">MCP Servers</div>
         <div class="metric-value">${data.mcpServers}/${data.mcpServersTotal}</div>
-        <div class="metric-detail">${data.mcpServers} implemented, ${data.mcpServersTotal - data.mcpServers} awaiting dependencies</div>
+        <div class="metric-detail">${data.mcpServers} substantive, ${data.mcpServersTotal - data.mcpServers} in progress</div>
       </div>
     `;
     grid.querySelectorAll("[data-goto]").forEach((card) => {
