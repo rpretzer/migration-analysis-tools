@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "source": "Migrated from figma_prompts/_brand_constraints.json",
+  "typography": {
+    "caption": "12sp",
+    "body_small": "14sp",
+    "body_medium": "16sp",
+    "body_large": "18sp",
+    "title_small": "20sp",
+    "title_medium": "22sp"
+  },
+  "colors": {
+    "primary": "#6366F1",
+    "error": "#EF4444",
+    "success": "#10B981",
+    "secondary_text": "#6B7280",
+    "background": "#F9FAFB",
+    "surface": "#FFFFFF",
+    "text_primary": "#121212"
+  },
+  "spacing": {
+    "base_unit": "4px",
+    "horizontal_page_padding": "16px",
+    "component_gap": "12px",
+    "section_gap": "24px"
+  },
+  "components": {
+    "corner_radius_card": "12px",
+    "corner_radius_button": "8px",
+    "button_min_height": "48dp",
+    "input_min_height": "48dp",
+    "tap_target_min": "48x48dp"
+  },
+  "tv_overrides": {
+    "text_min_size": "18sp",
+    "tap_target_min": "80x80dp",
+    "focus_ring": "4px solid",
+    "base_frame": "1920x1080"
+  }
+}

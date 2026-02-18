@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hoopla Digital — Product Development Coach</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Settings Modal (API key entry) -->
+  <div id="settings-overlay" class="overlay hidden">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <div class="modal-logo">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="28" height="28" rx="6" fill="#6366F1"/>
+            <path d="M8 20V8l6 4 6-4v12l-6-4-6 4z" fill="white"/>
+          </svg>
+        </div>
+        <h2 id="modal-title">Configure API Access</h2>
+      </div>
+      <p class="modal-description">
+        Enter your Anthropic API key to start the Coach session. The key is stored
+        in session memory only and is never saved to disk or sent anywhere except
+        directly to the Anthropic API.
+      </p>
+      <div class="form-group">
+        <label for="api-key-input">Anthropic API Key</label>
+        <input
+          type="password"
+          id="api-key-input"
+          placeholder="sk-ant-..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <span class="form-hint">Starts with <code>sk-ant-</code></span>
+      </div>
+      <div class="modal-actions">
+        <button id="save-key-btn" class="btn-primary" disabled>Start Session</button>
+      </div>
+      <p class="modal-footnote">
+        For this demo, Claude Sonnet is used. Production deployments use Opus 4.6
+        for architectural reasoning tasks.
+      </p>
+    </div>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="app-shell">
+
+    <!-- Header -->
+    <header class="app-header" role="banner">
+      <div class="header-brand">
+        <svg class="brand-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="32" height="32" rx="8" fill="#6366F1"/>
+          <path d="M9 23V9l7 4.667L23 9v14l-7-4.667L9 23z" fill="white"/>
+        </svg>
+        <div class="brand-text">
+          <span class="brand-name">Hoopla Digital</span>
+          <span class="brand-subtitle">Product Development Coach</span>
+        </div>
+      </div>
+      <nav class="header-actions" aria-label="Session actions">
+        <button id="new-conversation-btn" class="btn-ghost" title="Start a new conversation">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+          </svg>
+          New Conversation
+        </button>
+        <button id="export-btn" class="btn-ghost" title="Export conversation as Markdown">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 2v8M5 7l3 3 3-3M3 12h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Export
+        </button>
+        <button id="settings-btn" class="btn-ghost" title="API settings" aria-label="Open API settings">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.42 1.42M11.53 11.53l1.42 1.42M11.53 4.47l-1.42 1.42M4.95 11.05l-1.42 1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Settings
+        </button>
+      </nav>
+    </header>
+
+    <!-- Chat Area -->
+    <main class="chat-area" id="chat-area" role="main">
+      <div class="messages-container" id="messages-container" aria-live="polite" aria-label="Conversation">
+        <!-- Welcome state shown before first message -->
+        <div class="welcome-state" id="welcome-state">
+          <div class="welcome-icon" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="48" height="48" rx="12" fill="#EEF2FF"/>
+              <path d="M14 34V14l10 6.667L34 14v20l-10-6.667L14 34z" fill="#6366F1"/>
+            </svg>
+          </div>
+          <h1 class="welcome-title">Product Development Coach</h1>
+          <p class="welcome-description">
+            I help product teams at Hoopla Digital move from rough ideas to
+            well-structured business cases, epics, and user stories — without
+            skipping the hard questions.
+          </p>
+          <div class="starter-prompts" aria-label="Conversation starter suggestions">
+            <p class="starter-label">Try one of these to get started:</p>
+            <div class="starter-grid">
+              <button class="starter-chip" data-prompt="We want to add a social reading feature so library patrons can share what they're reading with friends.">
+                Social reading feature for library patrons
+              </button>
+              <button class="starter-chip" data-prompt="I think we should build an AI-powered recommendation engine for Hoopla. It would increase engagement.">
+                AI recommendation engine to boost engagement
+              </button>
+              <button class="starter-chip" data-prompt="We need to redesign the Hoopla mobile app. Users are complaining it feels outdated.">
+                Mobile app redesign — users say it feels outdated
+              </button>
+              <button class="starter-chip" data-prompt="Can we add offline downloads for audiobooks? A competitor just launched this.">
+                Offline downloads for audiobooks — competitor just launched
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typing indicator (outside messages container so it sticks above input) -->
+      <div class="typing-indicator hidden" id="typing-indicator" aria-label="Coach is thinking" aria-live="polite">
+        <div class="typing-bubble">
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+        </div>
+        <span class="typing-label">Coach is thinking…</span>
+      </div>
+    </main>
+
+    <!-- Input Bar -->
+    <footer class="input-bar" role="contentinfo">
+      <div class="input-wrapper">
+        <textarea
+          id="message-input"
+          class="message-textarea"
+          placeholder="Describe a product idea, problem, or request…"
+          rows="1"
+          aria-label="Message input"
+          aria-multiline="true"
+        ></textarea>
+        <button id="send-btn" class="send-btn" aria-label="Send message" disabled>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M2 9h14M9 2l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <p class="input-footnote">
+        Coach asks clarifying questions before generating artifacts. Vague inputs
+        will be pushed back on — that's intentional.
+      </p>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{
+  "mcpServers": {
+    "current-state": {
+      "command": "node",
+      "args": ["pipeline/mcp-servers/current-state/src/index.js"],
+      "description": "Reads the current-state model from pipeline/state/. Module lookup, dependency graph, test coverage, WCAG status, platform mapping."
+    },
+    "observability": {
+      "command": "node",
+      "args": ["pipeline/mcp-servers/observability/src/index.js"],
+      "description": "Append-only event log for pipeline observability. Structured tracing and dashboard metrics."
+    },
+    "pipeline": {
+      "command": "node",
+      "args": ["pipeline/mcp-servers/pipeline/src/index.js"],
+      "description": "Story status tracking. Stage transitions with validation."
+    },
+    "validation": {
+      "command": "node",
+      "args": ["pipeline/mcp-servers/validation/src/index.js"],
+      "description": "Schema validation for stories, specs, Figma prompts, test results, gate reports."
+    },
+    "integration": {
+      "command": "node",
+      "args": ["pipeline/mcp-servers/integration/src/index.js"],
+      "env": {
+        "JIRA_URL": "${JIRA_URL}",
+        "JIRA_EMAIL": "${JIRA_EMAIL}",
+        "JIRA_API_TOKEN": "${JIRA_API_TOKEN}",
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}",
+        "LAUNCHDARKLY_API_KEY": "${LAUNCHDARKLY_API_KEY}"
+      },
+      "description": "Bridges to Jira, GitHub, and LaunchDarkly. Issue management and feature flag operations."
+    },
+    "design-system": {
+      "command": "node",
+      "args": ["pipeline/mcp-servers/design-system/src/index.js"],
+      "description": "Design tokens, component specs, Figma layout reading, Figma Make prompt generation."
+    },
+    "analytics": {
+      "command": "node",
+      "args": ["pipeline/mcp-servers/analytics/src/index.js"],
+      "description": "PLACEHOLDER — custom analytics inventory and instrumentation validation. Configure after repo access."
+    }
+  }
+}

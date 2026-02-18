@@ -1,0 +1,191 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/schemas/observability-event.schema.json",
+  "title": "ObservabilityEvent",
+  "description": "Schema for a single observability event written to an events.jsonl file. Each line in the file is a valid JSON object conforming to this schema.",
+  "type": "object",
+  "required": ["timestamp", "agent", "story_id", "event_type"],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp of when the event occurred (e.g., 2026-02-17T14:32:00Z)."
+    },
+    "agent": {
+      "type": "string",
+      "description": "Identifier of the agent that produced this event (e.g., 'coding-agent', 'test-agent', 'gate-agent', 'spec-agent')."
+    },
+    "story_id": {
+      "type": "string",
+      "description": "Story identifier that this event belongs to (e.g., 'STORY-042'). Must match the story ID across all artifacts for this pipeline run."
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "agent_start",
+        "decision",
+        "artifact_write",
+        "artifact_read",
+        "question",
+        "gate_check",
+        "gate_verdict",
+        "human_action"
+      ],
+      "description": "Discriminator field. Determines which additional properties are required."
+    }
+  },
+  "oneOf": [
+    {
+      "title": "AgentStart",
+      "description": "Emitted once when an agent begins processing a story. Must be the first event an agent writes.",
+      "properties": {
+        "event_type": { "const": "agent_start" },
+        "input_refs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "File paths or artifact identifiers that this agent received as input (e.g., spec file path, implementation report path)."
+        }
+      },
+      "required": ["event_type", "input_refs"]
+    },
+    {
+      "title": "Decision",
+      "description": "Emitted when an agent makes a significant choice that affects outputs — e.g., classifying a module, selecting an implementation pattern, or choosing to skip a check.",
+      "properties": {
+        "event_type": { "const": "decision" },
+        "decision": {
+          "type": "string",
+          "description": "A concise statement of the decision made (e.g., 'Classified AuthModule as KMP candidate')."
+        },
+        "rationale": {
+          "type": "string",
+          "description": "The reasoning behind the decision, referencing specific evidence from input artifacts where possible."
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "The agent's confidence in this decision. Low confidence should trigger a question event or human review flag."
+        },
+        "input_refs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Optional. File paths or artifact identifiers that informed this decision."
+        }
+      },
+      "required": ["event_type", "decision", "rationale", "confidence"]
+    },
+    {
+      "title": "ArtifactWrite",
+      "description": "Emitted each time an agent writes or overwrites an artifact (report file, CSV, JSON, etc.).",
+      "properties": {
+        "event_type": { "const": "artifact_write" },
+        "output_ref": {
+          "type": "string",
+          "description": "File path of the artifact written (e.g., 'methodology/reports/STORY-042-implementation-report.md')."
+        },
+        "input_refs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "File paths or artifact identifiers that were read to produce this artifact."
+        }
+      },
+      "required": ["event_type", "output_ref", "input_refs"]
+    },
+    {
+      "title": "ArtifactRead",
+      "description": "Emitted each time an agent reads an artifact that was produced by another agent or external system.",
+      "properties": {
+        "event_type": { "const": "artifact_read" },
+        "input_ref": {
+          "type": "string",
+          "description": "File path or artifact identifier of the artifact read."
+        },
+        "purpose": {
+          "type": "string",
+          "description": "A brief statement of why this artifact was read (e.g., 'Reading implementation report to verify spec coverage before running tests')."
+        }
+      },
+      "required": ["event_type", "input_ref", "purpose"]
+    },
+    {
+      "title": "Question",
+      "description": "Emitted when an agent encounters ambiguity it cannot resolve autonomously. Blocking questions halt the pipeline until answered. Non-blocking questions are logged for human review but do not halt the pipeline.",
+      "properties": {
+        "event_type": { "const": "question" },
+        "question": {
+          "type": "string",
+          "description": "The specific question the agent needs answered, stated precisely enough for a human or another agent to respond unambiguously."
+        },
+        "blocking": {
+          "type": "boolean",
+          "description": "True if the pipeline cannot proceed without an answer. False if the agent can proceed with a documented assumption and log the question for later review."
+        },
+        "context": {
+          "type": "string",
+          "description": "Optional. Background information that helps the reviewer understand why the question arose."
+        }
+      },
+      "required": ["event_type", "question", "blocking"]
+    },
+    {
+      "title": "GateCheck",
+      "description": "Emitted once per check in the Quality Gate Agent's Checks table. Eight gate_check events are expected per gate run, one for each required check.",
+      "properties": {
+        "event_type": { "const": "gate_check" },
+        "check_name": {
+          "type": "string",
+          "description": "The name of the check as it appears in the gate report Checks table (e.g., 'spec_completeness', 'test_coverage', 'traceability')."
+        },
+        "result": {
+          "type": "string",
+          "enum": ["PASS", "FAIL"],
+          "description": "The outcome of this individual check."
+        },
+        "details": {
+          "type": "string",
+          "description": "Optional. Explanation of the result — required when result is FAIL, optional when PASS."
+        }
+      },
+      "required": ["event_type", "check_name", "result"]
+    },
+    {
+      "title": "GateVerdict",
+      "description": "Emitted once by the Quality Gate Agent after all gate_check events have been emitted. Must be the final event in the gate agent's run for a story.",
+      "properties": {
+        "event_type": { "const": "gate_verdict" },
+        "verdict": {
+          "type": "string",
+          "enum": ["GATE_PASS", "GATE_FAIL", "GATE_REVIEW_NEEDED"],
+          "description": "The overall gate verdict. Must match the Verdict field in the gate report document."
+        },
+        "failing_checks": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Optional. List of check names that resulted in FAIL. Required when verdict is GATE_FAIL; omit or set to empty array when verdict is GATE_PASS or GATE_REVIEW_NEEDED."
+        }
+      },
+      "required": ["event_type", "verdict"]
+    },
+    {
+      "title": "HumanAction",
+      "description": "Emitted by the orchestration system when a human reviewer takes an action on a story (approve, reject, waive). This event is written by the system on behalf of the human, not by the human directly.",
+      "properties": {
+        "event_type": { "const": "human_action" },
+        "reviewer": {
+          "type": "string",
+          "description": "Identity of the human reviewer (name, username, or role — e.g., 'tech-lead', 'jsmith')."
+        },
+        "action": {
+          "type": "string",
+          "description": "The action taken (e.g., 'approved', 'rejected', 'waived-accessibility-check', 'resolved-question')."
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Optional. The reviewer's stated reason for the action. Required when action is 'rejected' or 'waived-*'."
+        }
+      },
+      "required": ["event_type", "reviewer", "action"]
+    }
+  ]
+}

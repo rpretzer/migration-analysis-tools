@@ -1,0 +1,17 @@
+{
+  "name": "@hoopla-pipeline/analytics-server",
+  "version": "0.1.0",
+  "description": "PLACEHOLDER — Analytics MCP server stub. Tools return 'not yet configured' until repo access reveals the custom analytics implementation.",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
